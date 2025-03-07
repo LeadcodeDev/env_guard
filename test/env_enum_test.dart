@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:test/test.dart';
 import 'package:env_guard/env.dart';
 
@@ -63,6 +65,26 @@ void main() {
       final result = env.validate({'foo': schema}, {'foo': 'second'});
 
       expect(result['foo'], MyEnum.second);
+    });
+
+    test('should transform enum value to enumerate instance and get with method', () {
+      final directory = Directory.systemTemp.createTempSync();
+      final file = File('${directory.path}/.env');
+      file.writeAsStringSync('FOO=second');
+
+      env.define(root: directory, {
+        'FOO': env
+            .enumerable(MyEnum.values)
+            .transform(
+              (ctx, property) =>
+                  MyEnum.values.firstWhere((element) => element.value == property.value),
+            ),
+      });
+
+      expect(env.get('FOO'), isA<MyEnum>());
+      expect(env.get('FOO'), MyEnum.second);
+
+      directory.deleteSync(recursive: true);
     });
 
     test('should clone enum schema', () {
