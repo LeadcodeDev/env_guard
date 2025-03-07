@@ -1,18 +1,7 @@
 import 'dart:io';
 import 'dart:collection';
 
-import 'package:env_guard/src/contracts/env.dart';
-import 'package:env_guard/src/contracts/rule.dart';
-import 'package:env_guard/src/contracts/schema.dart';
-import 'package:env_guard/src/env_parser.dart';
-import 'package:env_guard/src/loader.dart';
-import 'package:env_guard/src/property.dart';
-import 'package:env_guard/src/rules/number_rule.dart';
-import 'package:env_guard/src/rules/string_rule.dart';
-import 'package:env_guard/src/schema/number_schema.dart';
-import 'package:env_guard/src/schema/string_schema.dart';
-import 'package:env_guard/src/simple_error_reporter.dart';
-import 'package:env_guard/src/validator.dart';
+import 'package:env_guard/env.dart';
 
 final class Env {
   ErrorReporter Function() errorReporter = SimpleErrorReporter.new;
@@ -22,6 +11,10 @@ final class Env {
 
   T get<T>(String key) {
     return _environments[key] as T;
+  }
+
+  void dispose() {
+    _environments.clear();
   }
 
   EnvString string({String? message}) {
@@ -38,6 +31,13 @@ final class Env {
     return EnvNumberSchema(rules);
   }
 
+  EnvBoolean boolean({String? message}) {
+    final Queue<EnvRule> rules = Queue();
+    rules.add(EnvBooleanRule(message));
+
+    return EnvBooleanSchema(rules);
+  }
+
   Map<String, dynamic> parse(String content) {
     return parser.parse(content);
   }
@@ -50,7 +50,7 @@ final class Env {
 
     for (final element in schema.entries) {
       property.name = element.key;
-      property.value = data[element.key];
+      property.value = data.containsKey(element.key) ? data[element.key] : MissingValue();
 
       element.value.parse(validatorContext, property);
       resultMap[property.name] = property.value;
@@ -65,45 +65,40 @@ final class Env {
     return resultMap;
   }
 
-  Map<String, dynamic> create(
-    Map<String, EnvSchema> schema, {
-    Directory? root,
-    bool includeDartEnv = false,
-  }) {
+  void define(Map<String, EnvSchema> schema, {Directory? root, bool includeDartEnv = true}) {
     final loader = Loader(root ?? Directory.current);
 
     if (includeDartEnv) {
       _environments.addEntries(Platform.environment.entries);
     }
 
-    _environments['DART_ENV'] = String.fromEnvironment('DART_ENV', defaultValue: 'development');
-
-    final envs = loader.load();
-
-    final target = '.env.${_environments['DART_ENV']}';
-    EnvEntry? current = envs.where((element) => element.name == target).firstOrNull;
-
-    current ??= envs.firstWhere(
-      (element) => element.name == '.env',
-      orElse: () => throw Exception('Environment file not found'),
-    );
-
-    final values = parser.parse(current.content);
-    for (final element in values.entries) {
-      if (_environments.containsKey(element.key)) {
-        throw Exception('Environment variable ${element.key} already exists');
-      }
-
-      _environments[element.key] = element.value;
+    if (!_environments.containsKey('DART_ENV')) {
+      _environments['DART_ENV'] = String.fromEnvironment('DART_ENV', defaultValue: 'development');
     }
 
-    final validated = validate(schema, _environments);
+    final envs = loader.load();
+    final target = '.env.${_environments['DART_ENV']}';
 
-    _environments
-      ..clear()
-      ..addAll(validated);
+    EnvEntry? current = envs.where((element) => element.name == target).firstOrNull;
+    current ??= envs.where((element) => element.name == '.env').firstOrNull;
 
-    return _environments;
+    final Map<String, dynamic> validated = {};
+    if (current != null) {
+      final values = parser.parse(current.content);
+      for (final element in values.entries) {
+        if (_environments.containsKey(element.key)) {
+          throw Exception('Environment variable ${element.key} already exists');
+        }
+      }
+
+      validated.addAll(validate(schema, values));
+    } else {
+      validated.addAll(validate(schema, _environments));
+    }
+
+    for (final element in validated.entries) {
+      _environments[element.key] = element.value;
+    }
   }
 }
 

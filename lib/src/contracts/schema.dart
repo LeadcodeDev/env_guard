@@ -34,3 +34,5 @@ abstract interface class EnvNumber implements EnvSchema, BasicSchema<EnvNumber> 
   /// ```dart
   EnvNumber integer({String? message});
 }
+
+abstract interface class EnvBoolean implements EnvSchema, BasicSchema<EnvBoolean> {}

@@ -1,5 +1,4 @@
-import 'package:env_guard/src/contracts/env.dart';
-import 'package:env_guard/src/contracts/rule.dart';
+import 'package:env_guard/env.dart';
 
 final class EnvOptionalRule implements EnvRule {
   @override

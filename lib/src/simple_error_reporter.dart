@@ -1,4 +1,4 @@
-import 'package:env_guard/src/contracts/env.dart';
+import 'package:env_guard/env.dart';
 import 'package:env_guard/src/exceptions/validation_exception.dart';
 
 class SimpleErrorReporter implements ErrorReporter {

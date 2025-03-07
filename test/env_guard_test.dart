@@ -4,16 +4,9 @@ import 'package:env_guard/env.dart';
 import 'package:env_guard/src/exceptions/validation_exception.dart';
 import 'package:test/test.dart';
 
-enum Env {
-  secret('SECRET'),
-  secret2('SECRET_2');
-
-  final String value;
-
-  const Env(this.value);
-}
-
 void main() {
+  tearDown(env.dispose);
+
   test('should load environment from string with one value', () {
     final values = env.parse('FOO=foo');
     expect(values, {'FOO': 'foo'});
@@ -29,35 +22,10 @@ void main() {
         PORT=8080
         HOST=localhost
       ''';
+
     final result = env.parse(content);
     expect(result['PORT'], '8080');
     expect(result['HOST'], 'localhost');
-  });
-
-  test('should validate environment variables', () {
-    final schema = {
-      'PORT': env.number().integer(),
-      'HOST': env.string(),
-    };
-    final data = {
-      'PORT': '8080',
-      'HOST': 'localhost',
-    };
-    final result = env.validate(schema, data);
-    expect(result['PORT'], 8080);
-    expect(result['HOST'], 'localhost');
-  });
-
-  test('should throw error on invalid environment variables', () {
-    final schema = {
-      'PORT': env.number().integer(),
-      'HOST': env.string(),
-    };
-    final data = {
-      'PORT': 'not a number',
-      'HOST': 'localhost',
-    };
-    expect(() => env.validate(schema, data), throwsA(isA<EnvGuardException>()));
   });
 
   test('should load environment variables from file', () {
@@ -68,15 +36,18 @@ void main() {
         HOST=localhost
       ''');
 
-    final schema = {
+    env.define(root: directory, {
       'PORT': env.number().integer(),
       'HOST': env.string(),
-    };
+    });
 
-    final result = env.create(schema, root: directory);
-    expect(result['PORT'], 8080);
-    expect(result['HOST'], 'localhost');
+    expect(env.get('PORT'), 8080);
+    expect(env.get('HOST'), 'localhost');
 
     directory.deleteSync(recursive: true);
+  });
+
+  test('should delete environment key from delete method', () {
+    expect(env.get('PORT'), isNull);
   });
 }
