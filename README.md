@@ -4,7 +4,18 @@ Env Guard est une bibliothèque de validation robuste et typée pour Dart/Flutte
 
 ![icons technologies](https://skillicons.dev/icons?i=dart,flutter)
 
-## Simply to use
+## 🛠 Key features
+
+| Feature                   | Description                                                |
+|---------------------------|------------------------------------------------------------|
+| ✅ Type-Safe Validation    | Define schemas with a fluent API and ensure data integrity |
+| 🧱 Rich Set of Validators | Strings, numbers, booleans, enums                          |
+| 🔄 Data Transformation    | Transform values during validation                         |
+| 🚧 Null Safety            | Full support for optional properties                       |
+| 📦 Extremely small size   | Package size `< 8kb`                                       |
+
+
+## ✨ Simply to use
 
 Consider the following example, where we define a schema for our application's environment variables.
 ```dotenv
@@ -35,7 +46,7 @@ void main() {
 }
 ```
 
-### Error handling
+### 🚧 Error handling
 When your application starts up and your environment does not meet the requirements defined by the validator, an `EnvGuardException` is thrown using the following format.
 ```json
 {
