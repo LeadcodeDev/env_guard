@@ -1,5 +1,5 @@
 import 'dart:collection';
-import 'package:env_guard/env.dart';
+import 'package:env_guard/env_guard.dart';
 
 abstract interface class Enumerable<T> {
   T get value;

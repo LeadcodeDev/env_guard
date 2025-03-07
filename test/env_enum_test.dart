@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:test/test.dart';
-import 'package:env_guard/env.dart';
+import 'package:env_guard/env_guard.dart';
 
 enum MyEnum implements Enumerable<String> {
   first('first'),

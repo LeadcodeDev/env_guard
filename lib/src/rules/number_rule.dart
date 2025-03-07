@@ -1,4 +1,4 @@
-import 'package:env_guard/env.dart';
+import 'package:env_guard/env_guard.dart';
 
 void handleNumberConversionError (GuardContext ctx, PropertyContext property, String? message) {
   final str = message ?? 'The value must be a number';

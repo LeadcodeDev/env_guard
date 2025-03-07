@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:env_guard/env.dart';
+import 'package:env_guard/env_guard.dart';
 import 'package:env_guard/src/rules/basic_rule.dart';
 
 abstract interface class RuleParserContract {

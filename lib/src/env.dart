@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:collection';
 
-import 'package:env_guard/env.dart';
+import 'package:env_guard/env_guard.dart';
 
 final class Env {
   ErrorReporter Function() errorReporter = SimpleErrorReporter.new;

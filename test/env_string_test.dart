@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:env_guard/env.dart';
+import 'package:env_guard/env_guard.dart';
 
 void main() {
   group('EnvStringSchema and EnvStringRule', () {

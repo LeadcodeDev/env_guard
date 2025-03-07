@@ -1,4 +1,4 @@
-import 'package:env_guard/env.dart';
+import 'package:env_guard/env_guard.dart';
 
 final class EnvStringRule implements EnvRule {
   final String? message;

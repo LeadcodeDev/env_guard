@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:env_guard/env.dart';
-import 'package:env_guard/src/exceptions/validation_exception.dart';
+import 'package:env_guard/env_guard.dart';
 import 'package:test/test.dart';
 
 void main() {
