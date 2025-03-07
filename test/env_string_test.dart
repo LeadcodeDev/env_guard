@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:env_guard/env.dart';
 
 void main() {
-  group('EnvBooleanSchema and EnvBooleanRule', () {
+  group('EnvStringSchema and EnvStringRule', () {
     tearDown(env.dispose);
 
     test('should parse valid string string "true"', () {

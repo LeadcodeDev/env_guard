@@ -15,6 +15,8 @@ abstract interface class BasicSchema<T extends EnvSchema> {
 
 abstract interface class EnvString implements EnvSchema, BasicSchema<EnvString> {}
 
+abstract interface class EnvEnum implements EnvSchema, BasicSchema<EnvEnum> {}
+
 abstract interface class EnvNumber implements EnvSchema, BasicSchema<EnvNumber> {
   /// Check if the number is a double [message] the error message to display
   /// ```dart

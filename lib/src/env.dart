@@ -38,6 +38,13 @@ final class Env {
     return EnvBooleanSchema(rules);
   }
 
+  EnvEnum enumerable<T extends Enumerable>(List<T> source, {String? message}) {
+    final Queue<EnvRule> rules = Queue();
+    rules.add(EnvEnumRule(message, source));
+
+    return EnvEnumSchema(rules, source);
+  }
+
   Map<String, dynamic> parse(String content) {
     return parser.parse(content);
   }
