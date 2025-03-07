@@ -1,6 +1,8 @@
 # ⚙️ Env Guard
 
-Env Guard est une bibliothèque de validation robuste et typée pour Dart/Flutter, conçue pour simplifier et sécuriser la gestion des variables d'environnement dans vos applications. la librairie offre une solution élégante pour valider et transformer les données d'environnement, garantissant qu'elles respectent un format attendu avant d'être utilisées.
+Env Guard is a robust, typed validation library for Dart/Flutter, designed to simplify and secure the management of environment variables in your applications. 
+
+The library offers an elegant solution for validating and transforming environment data, ensuring that it complies with an expected format before being used.
 
 ![icons technologies](https://skillicons.dev/icons?i=dart,flutter)
 
