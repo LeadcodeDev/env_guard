@@ -23,6 +23,9 @@ final class EnvEnumRule<T> implements EnvRule {
       final error = ctx.errorReporter.format('enum', property, str, {});
 
       ctx.errorReporter.report('enum', property.name, error);
+      return;
     }
+
+    property.mutate(values.firstOrNull);
   }
 }

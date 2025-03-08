@@ -1,3 +1,5 @@
+import 'package:env_guard/env_guard.dart';
+
 abstract interface class ErrorReporter {
   List<Map<String, Object>> get errors;
 
@@ -31,3 +33,7 @@ abstract interface class PropertyContext {
 final class MissingValue {}
 
 abstract interface class ValidatorContract {}
+
+abstract interface class DefineEnvironment {
+  Map<String, EnvSchema> get schema;
+}

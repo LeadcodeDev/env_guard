@@ -1,16 +1,32 @@
-import 'dart:io';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:env_guard/env_guard.dart';
+
+final bracketPattern = RegExp(r'\{(\w+)\}');
 
 final class Env {
   ErrorReporter Function() errorReporter = SimpleErrorReporter.new;
 
   final Map<String, dynamic> _environments = {};
-  final parser = EnvParser();
+  final _envParser = EnvParser();
 
-  T get<T>(String key) {
-    return _environments[key] as T;
+  T get<T>(String key, {T? defaultValue}) {
+    final currentValue = _environments[key];
+
+    if (currentValue is String) {
+      return currentValue.replaceAllMapped(bracketPattern, (match) {
+            final variableName = match.group(1);
+            return variableName != null ? get(variableName)?.toString() ?? '' : '';
+          })
+          as T;
+    }
+
+    if (currentValue == null && defaultValue != null) {
+      return defaultValue;
+    }
+
+    return currentValue as T;
   }
 
   void dispose() {
@@ -46,7 +62,7 @@ final class Env {
   }
 
   Map<String, dynamic> parse(String content) {
-    return parser.parse(content);
+    return _envParser.parse(content);
   }
 
   Map<String, dynamic> validate(Map<String, EnvSchema> schema, Map<String, dynamic> data) {
@@ -91,7 +107,7 @@ final class Env {
 
     final Map<String, dynamic> validated = {};
     if (current != null) {
-      final values = parser.parse(current.content);
+      final values = _envParser.parse(current.content);
       for (final element in values.entries) {
         if (_environments.containsKey(element.key)) {
           throw Exception('Environment variable ${element.key} already exists');
@@ -106,6 +122,10 @@ final class Env {
     for (final element in validated.entries) {
       _environments[element.key] = element.value;
     }
+  }
+
+  void defineOf<T extends DefineEnvironment>(T Function() source, {Directory? root, bool includeDartEnv = true}) {
+    define(source().schema, root: root, includeDartEnv: includeDartEnv);
   }
 }
 

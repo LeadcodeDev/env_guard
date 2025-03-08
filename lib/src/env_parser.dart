@@ -7,6 +7,9 @@ final class EnvParser {
 
     for (final line in lines.nonNulls.where((element) => element.isNotEmpty)) {
       final trimmed = line.trim();
+      if (trimmed.startsWith('#')) {
+        continue;
+      }
 
       final [key, value] = switch (trimmed) {
         String(:final contains) when contains('=') => trimmed.split('='),

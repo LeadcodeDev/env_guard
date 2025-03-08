@@ -20,7 +20,7 @@ void main() {
     test('should parse valid enum value', () {
       final result = env.validate({'foo': env.enumerable(MyEnum.values)}, {'foo': 'first'});
       expect(result['foo'], isNotNull);
-      expect(result['foo'], MyEnum.first.value);
+      expect(result['foo'], MyEnum.first);
     });
 
     test('should throw error on invalid enum value', () {
@@ -56,15 +56,10 @@ void main() {
     });
 
     test('should transform enum value to enumerate instance', () {
-      final schema = env
-          .enumerable(MyEnum.values)
-          .transform(
-            (ctx, property) =>
-                MyEnum.values.firstWhere((element) => element.value == property.value),
-          );
+      final schema = env.enumerable(MyEnum.values).transform((ctx, property) => MyEnum.first);
       final result = env.validate({'foo': schema}, {'foo': 'second'});
 
-      expect(result['foo'], MyEnum.second);
+      expect(result['foo'], MyEnum.first);
     });
 
     test('should transform enum value to enumerate instance and get with method', () {
@@ -73,16 +68,11 @@ void main() {
       file.writeAsStringSync('FOO=second');
 
       env.define(root: directory, {
-        'FOO': env
-            .enumerable(MyEnum.values)
-            .transform(
-              (ctx, property) =>
-                  MyEnum.values.firstWhere((element) => element.value == property.value),
-            ),
+        'FOO': env.enumerable(MyEnum.values).transform((ctx, property) => MyEnum.first),
       });
 
       expect(env.get('FOO'), isA<MyEnum>());
-      expect(env.get('FOO'), MyEnum.second);
+      expect(env.get('FOO'), MyEnum.first);
 
       directory.deleteSync(recursive: true);
     });
