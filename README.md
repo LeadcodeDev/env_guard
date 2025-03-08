@@ -24,6 +24,7 @@ Consider the following example, where we define a schema for our application's e
 HOST=127.0.0.1
 PORT=8080
 LOG_LEVEL=debug
+URI={HOST}:{PORT}
 ```
 
 We can validate these environment variables using the `env_guard` library in the following way.
@@ -45,6 +46,35 @@ void main() {
   });
 
   expect(env.get('HOST'), '127.0.0.1');
+  expect(env.get('URI'), '127.0.0.1:8080');
+}
+```
+
+### 💪 Enforce data recovery
+
+You can define your validation constraints from an enumeration to make the names of your variables contractual in addition to your types.
+
+```dart
+final class Env implements DefineEnvironment {
+  static final String host = 'HOST';
+  static final String port = 'PORT';
+  static final String uri = 'URI';
+
+  @override
+  final Map<String, EnvSchema> constraints = {
+    host: env.string().optional(),
+    port: env.number().integer(),
+    uri: env.string(),
+  };
+}
+```
+
+```dart
+void main() {
+  env.defineOf(Env.new);
+
+  expect(env.get(Env.host), '127.0.0.1');
+  expect(env.get(Env.port), 8080);
 }
 ```
 
