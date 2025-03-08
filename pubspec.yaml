@@ -1,6 +1,6 @@
 name: env_guard
 description: A simple, robust, and typed environment validation library for Dart/Flutter, designed to simplify and secure environment in applications
-version: 1.0.1
+version: 1.1.0
 repository: https://github.com/LeadcodeDev/env_guard
 
 environment:
