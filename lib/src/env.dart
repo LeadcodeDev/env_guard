@@ -17,7 +17,9 @@ final class Env {
     if (currentValue is String) {
       return currentValue.replaceAllMapped(bracketPattern, (match) {
             final variableName = match.group(1);
-            return variableName != null ? get(variableName)?.toString() ?? '' : '';
+            return variableName != null
+                ? get(variableName)?.toString() ?? ''
+                : '';
           })
           as T;
     }
@@ -65,7 +67,10 @@ final class Env {
     return _envParser.parse(content);
   }
 
-  Map<String, dynamic> validate(Map<String, EnvSchema> schema, Map<String, dynamic> data) {
+  Map<String, dynamic> validate(
+    Map<String, EnvSchema> schema,
+    Map<String, dynamic> data,
+  ) {
     final Map<String, dynamic> resultMap = {};
     final reporter = errorReporter();
     final validatorContext = ValidatorContext(reporter, data);
@@ -73,7 +78,8 @@ final class Env {
 
     for (final element in schema.entries) {
       property.name = element.key;
-      property.value = data.containsKey(element.key) ? data[element.key] : MissingValue();
+      property.value =
+          data.containsKey(element.key) ? data[element.key] : MissingValue();
 
       element.value.parse(validatorContext, property);
       resultMap[property.name] = property.value;
@@ -88,7 +94,11 @@ final class Env {
     return resultMap;
   }
 
-  void define(Map<String, EnvSchema> schema, {Directory? root, bool includeDartEnv = true}) {
+  void define(
+    Map<String, EnvSchema> schema, {
+    Directory? root,
+    bool includeDartEnv = true,
+  }) {
     final loader = Loader(root ?? Directory.current);
 
     if (includeDartEnv) {
@@ -96,13 +106,17 @@ final class Env {
     }
 
     if (!_environments.containsKey('DART_ENV')) {
-      _environments['DART_ENV'] = String.fromEnvironment('DART_ENV', defaultValue: 'development');
+      _environments['DART_ENV'] = String.fromEnvironment(
+        'DART_ENV',
+        defaultValue: 'development',
+      );
     }
 
     final envs = loader.load();
     final target = '.env.${_environments['DART_ENV']}';
 
-    EnvEntry? current = envs.where((element) => element.name == target).firstOrNull;
+    EnvEntry? current =
+        envs.where((element) => element.name == target).firstOrNull;
     current ??= envs.where((element) => element.name == '.env').firstOrNull;
 
     final Map<String, dynamic> validated = {};
@@ -124,9 +138,15 @@ final class Env {
     }
   }
 
-  void defineOf<T extends DefineEnvironment>(T Function() source, {Directory? root, bool includeDartEnv = true}) {
+  void defineOf<T extends DefineEnvironment>(
+    T Function() source, {
+    Directory? root,
+    bool includeDartEnv = true,
+  }) {
     define(source().schema, root: root, includeDartEnv: includeDartEnv);
   }
+
+  Map<String, dynamic> toJson() => Map.from(_environments);
 }
 
 final env = Env();

@@ -9,13 +9,22 @@ class SimpleErrorReporter implements ErrorReporter {
   bool hasError = false;
 
   @override
-  bool hasErrorForField(String fieldName) => errors.any((element) => element['field'] == fieldName);
+  bool hasErrorForField(String fieldName) =>
+      errors.any((element) => element['field'] == fieldName);
 
   @override
-  String format(String rule, PropertyContext field, String? message, Map<String, dynamic> options) {
+  String format(
+    String rule,
+    PropertyContext field,
+    String? message,
+    Map<String, dynamic> options,
+  ) {
     String content = message ?? '';
     for (final element in options.entries) {
-      content = content.replaceAll('{${element.key}}', element.value.toString());
+      content = content.replaceAll(
+        '{${element.key}}',
+        element.value.toString(),
+      );
     }
 
     return content

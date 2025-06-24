@@ -8,9 +8,9 @@ The library offers an elegant solution for validating and transforming environme
 
 ## 🛠 Key features
 
-| Feature                   | Description                                                |
-|---------------------------|------------------------------------------------------------|
-| ✅ Type-Safe Validation    | Define schemas with a fluent API and ensure data integrity |
+| Feature                  | Description                                                |
+| ------------------------ | ---------------------------------------------------------- |
+| ✅ Type-Safe Validation   | Define schemas with a fluent API and ensure data integrity |
 | 🧱 Rich Set of Validators | Strings, numbers, booleans, enums                          |
 | 🔄 Data Transformation    | Transform values during validation                         |
 | 🚧 Null Safety            | Full support for optional properties                       |
@@ -61,7 +61,7 @@ final class Env implements DefineEnvironment {
   static final String uri = 'URI';
 
   @override
-  final Map<String, EnvSchema> constraints = {
+  final Map<String, EnvSchema> schema = {
     host: env.string().optional(),
     port: env.number().integer(),
     uri: env.string(),

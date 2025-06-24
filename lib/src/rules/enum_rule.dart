@@ -19,7 +19,7 @@ final class EnvEnumRule<T> implements EnvRule {
 
     final values = source.where((element) => element.value == property.value);
     if (values.firstOrNull == null) {
-      final str = message ?? 'The value must be an enum of ${source.map((e) => e.value).toList()}';
+      final str = message ?? 'The value must match one of the expected enum values ${source.map((e) => e.value).toList()}';
       final error = ctx.errorReporter.format('enum', property, str, {});
 
       ctx.errorReporter.report('enum', property.name, error);
