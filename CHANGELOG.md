@@ -1,5 +1,7 @@
+## 1.3.0
+- Remove existing environment key exception for `DART_ENV`
+
 ## 1.2.0
-- Remove existing environment key exception
 - Add `toJson()` method to convert environment variables to a Map
 
 ## 1.1.0
