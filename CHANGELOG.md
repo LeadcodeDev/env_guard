@@ -1,3 +1,6 @@
+## 1.3.1
+- Take given schema to apply existing constraint
+
 ## 1.3.0
 - Remove existing environment key exception for `DART_ENV`
 
