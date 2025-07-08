@@ -175,7 +175,7 @@ final class Env {
     final Map<String, dynamic> validated = {};
     if (current != null) {
       final values = _envParser.parse(current.content);
-      for (final element in values.entries) {
+      for (final element in schema.entries) {
         if (element.key != 'DART_ENV' &&
             _environments.containsKey(element.key)) {
           throw Exception('Environment variable ${element.key} already exists');
